@@ -121,8 +121,12 @@ opthelp:
     argv = opt_rest();
 
     if (argc == 1) {
-        if (!opt_int(argv[0], &num) || num <= 0)
+        if (!opt_int(argv[0], &num) || num <= 0) {
             goto end;
+        } else if (num > 16384) {
+            BIO_printf(bio_err, "Key size %d bit is over 16384 bit. This is currently not supported.\n", num);
+            goto end;
+        }
     } else if (argc > 0) {
         BIO_printf(bio_err, "Extra arguments given.\n");
         goto opthelp;
