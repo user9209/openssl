@@ -128,6 +128,10 @@ int dsaparam_main(int argc, char **argv)
         goto end;
 
     if (numbits > 0) {
+        if (numbits > 8192) {
+            BIO_printf(bio_err, "The DSA key size of %d bits is currently not supported. The limit is 8192 bit.\n", BN_num_bits(p));
+            goto end;
+        }
         cb = BN_GENCB_new();
         if (cb == NULL) {
             BIO_printf(bio_err, "Error allocating BN_GENCB object\n");
