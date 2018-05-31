@@ -44,7 +44,8 @@
 
 #define DEFAULT_KEY_LENGTH      2048
 #define MIN_KEY_LENGTH          512
-#define MAX_KEY_LENGTH          16384
+#define MAX_KEY_LENGTH_RSA      16384
+#define MAX_KEY_LENGTH_DSA      8192
 
 static int make_REQ(X509_REQ *req, EVP_PKEY *pkey, char *dn, int mutlirdn,
                     int attribs, unsigned long chtype);
@@ -624,12 +625,17 @@ int req_main(int argc, char **argv)
 
     if (newreq || x509) {
 
-        // todo: check key size
-
         if (pkey == NULL) {
             BIO_printf(bio_err, "you need to specify a private key\n");
             goto end;
         }
+		
+		// todo: check key size: does this work: BN_num_bits(pkey) ? Where to get pkey_type?
+		if ((BN_num_bits(pkey) > MAX_KEY_LENGTH_RSA && pkey_type == EVP_PKEY_RSA)
+            || (BN_num_bits(pkey) > MAX_KEY_LENGTH_DSA && pkey_type == EVP_PKEY_DSA))  {
+			BIO_printf(bio_err, "Key size of %d bit is not supported. The limit is %d bit for RSA and %d bit for DSA.\n", BN_num_bits(p), MAX_KEY_LENGTH_RSA, MAX_KEY_LENGTH_DSA);
+			goto end;
+		}
 
         if (req == NULL) {
             req = X509_REQ_new();

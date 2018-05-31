@@ -119,8 +119,8 @@ int gendsa_main(int argc, char **argv)
     DSA_get0_pqg(dsa, &p, NULL, NULL);
 
     if (BN_num_bits(p) > 8192) {
-        BIO_printf(bio_err, "The DSA key size of %d bits is currently not supported. The limit is 8192 bit.\n", BN_num_bits(p));
-        goto end;
+		// Parameter MAX_KEY_LENGTH_DSA in req.c
+		BIO_printf(bio_err, "Warning: Key size %d bit is not supported by 'openssl x509 -req'. The limit is 8192.\n", BN_num_bits(p));
     }
 
     BIO_printf(bio_err, "Generating DSA key, %d bits\n", BN_num_bits(p));
