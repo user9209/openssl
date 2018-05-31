@@ -124,7 +124,7 @@ opthelp:
         if (!opt_int(argv[0], &num) || num <= 0) {
             goto end;
         } else if (num > 16384) {
-			// Parameter MAX_KEY_LENGTH_RSA in req.c
+            // Parameter MAX_KEY_LENGTH_RSA in req.c
             BIO_printf(bio_err, "Warning: Key size %d bit is not supported by 'openssl x509 -req'. The limit is 16384.\n", num);
         }
     } else if (argc > 0) {

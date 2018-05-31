@@ -629,13 +629,13 @@ int req_main(int argc, char **argv)
             BIO_printf(bio_err, "you need to specify a private key\n");
             goto end;
         }
-		
-		// todo: check key size: does this work: BN_num_bits(pkey) ? Where to get pkey_type?
-		if ((BN_num_bits(pkey) > MAX_KEY_LENGTH_RSA && pkey_type == EVP_PKEY_RSA)
+        
+        // todo: check key size: does this work: BN_num_bits(pkey) ? Where to get pkey_type?
+        if ((BN_num_bits(pkey) > MAX_KEY_LENGTH_RSA && pkey_type == EVP_PKEY_RSA)
             || (BN_num_bits(pkey) > MAX_KEY_LENGTH_DSA && pkey_type == EVP_PKEY_DSA))  {
-			BIO_printf(bio_err, "Key size of %d bit is not supported. The limit is %d bit for RSA and %d bit for DSA.\n", BN_num_bits(p), MAX_KEY_LENGTH_RSA, MAX_KEY_LENGTH_DSA);
-			goto end;
-		}
+            BIO_printf(bio_err, "Key size of %d bit is not supported. The limit is %d bit for RSA and %d bit for DSA.\n", BN_num_bits(p), MAX_KEY_LENGTH_RSA, MAX_KEY_LENGTH_DSA);
+            goto end;
+        }
 
         if (req == NULL) {
             req = X509_REQ_new();

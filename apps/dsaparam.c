@@ -129,8 +129,8 @@ int dsaparam_main(int argc, char **argv)
 
     if (numbits > 0) {
         if (numbits > 8192) {
-			// Parameter MAX_KEY_LENGTH_DSA in req.c
-			BIO_printf(bio_err, "Warning: Key size %d bit is not supported by 'openssl x509 -req'. The limit is 8192.\n", numbits);
+            // Parameter MAX_KEY_LENGTH_DSA in req.c
+            BIO_printf(bio_err, "Warning: Key size %d bit is not supported by 'openssl x509 -req'. The limit is 8192.\n", numbits);
         }
         cb = BN_GENCB_new();
         if (cb == NULL) {
