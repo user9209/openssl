@@ -121,10 +121,9 @@ int gendsa_main(int argc, char **argv)
     DSA_get0_pqg(dsa, &p, NULL, NULL);
 
     if (BN_num_bits(p) > DSA_RECOMMENDED_MAX_KEY_LENGTH)
-       BIO_printf(bio_out, "Warning: It is not recommended to use more than %d bit for RSA keys"
-			     "and more than %d bit for DSA keys.\n"
-                 "Longer key size may behave not as expected. Your key size is %d!\n",
-			     RSA_RECOMMENDED_MAX_KEY_LENGTH, DSA_RECOMMENDED_MAX_KEY_LENGTH , numbits);
+       BIO_printf(bio_err, "Warning: It is not recommended to use more than %d bit for DSA keys.\n"
+                 "        Longer key size may behave not as expected. Your key size is %d!\n",
+			     DSA_RECOMMENDED_MAX_KEY_LENGTH , BN_num_bits(p));
 
     BIO_printf(bio_err, "Generating DSA key, %d bits\n", BN_num_bits(p));
     if (!DSA_generate_key(dsa))
