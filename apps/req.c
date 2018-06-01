@@ -44,7 +44,8 @@
 
 #define DEFAULT_KEY_LENGTH      2048
 #define MIN_KEY_LENGTH          512
-#define MAX_KEY_LENGTH          16384
+#define RSA_RECOMMENDED_MAX_KEY_LENGTH    16384
+#define DSA_RECOMMENDED_MAX_KEY_LENGTH    8192
 
 static int make_REQ(X509_REQ *req, EVP_PKEY *pkey, char *dn, int mutlirdn,
                     int attribs, unsigned long chtype);
@@ -519,12 +520,11 @@ int req_main(int argc, char **argv)
         }
 
         if ((newkey > MAX_KEY_LENGTH_RSA && pkey_type == EVP_PKEY_RSA)
-            || (newkey > MAX_KEY_LENGTH_DSA && pkey_type == EVP_PKEY_DSA)) {
-            BIO_printf(bio_err, "private key length is too long,\n");
-            BIO_printf(bio_err, "it needs to be at maximum %d bits for RSA and %d bits for DSA, not %ld\n",
-                       MAX_KEY_LENGTH_RSA, MAX_KEY_LENGTH_DSA, newkey);
-            goto end;
-        }
+            || (newkey > MAX_KEY_LENGTH_DSA && pkey_type == EVP_PKEY_DSA))
+			BIO_printf(bio_out, "Warning: It is not recommended to use more than %d bit for RSA keys"
+			     "and more than %d bit for DSA keys.\n"
+                 "Longer key size may behave not as expected. Your key size is %d!\n",
+			     RSA_RECOMMENDED_MAX_KEY_LENGTH, DSA_RECOMMENDED_MAX_KEY_LENGTH , numbits);
 
         if (genctx == NULL) {
             genctx = set_keygen_ctx(NULL, &pkey_type, &newkey,
@@ -623,13 +623,17 @@ int req_main(int argc, char **argv)
     }
 
     if (newreq || x509) {
-
-        // todo: check key size
-
         if (pkey == NULL) {
             BIO_printf(bio_err, "you need to specify a private key\n");
             goto end;
         }
+		
+		// todo: check key size
+		if (BN_num_bits(pkey) > DSA_RECOMMENDED_MAX_KEY_LENGTH)
+            BIO_printf(bio_out, "Warning: It is not recommended to use more than %d bit for RSA keys"
+			     "and more than %d bit for DSA keys.\n"
+                 "Longer key size may behave not as expected. Your key size is %d!\n",
+			     RSA_RECOMMENDED_MAX_KEY_LENGTH, DSA_RECOMMENDED_MAX_KEY_LENGTH , BN_num_bits(pkey));
 
         if (req == NULL) {
             req = X509_REQ_new();

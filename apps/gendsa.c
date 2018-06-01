@@ -25,6 +25,8 @@ NON_EMPTY_TRANSLATION_UNIT
 # include <openssl/x509.h>
 # include <openssl/pem.h>
 
+#define DSA_RECOMMENDED_MAX_KEY_LENGTH    8192
+
 typedef enum OPTION_choice {
     OPT_ERR = -1, OPT_EOF = 0, OPT_HELP,
     OPT_OUT, OPT_PASSOUT, OPT_ENGINE, OPT_CIPHER,
@@ -118,10 +120,11 @@ int gendsa_main(int argc, char **argv)
 
     DSA_get0_pqg(dsa, &p, NULL, NULL);
 
-    if (BN_num_bits(p) > 8192) {
-        BIO_printf(bio_err, "The DSA key size of %d bits is currently not supported. The limit is 8192 bit.\n", BN_num_bits(p));
-        goto end;
-    }
+    if (BN_num_bits(p) > DSA_RECOMMENDED_MAX_KEY_LENGTH)
+       BIO_printf(bio_out, "Warning: It is not recommended to use more than %d bit for RSA keys"
+			     "and more than %d bit for DSA keys.\n"
+                 "Longer key size may behave not as expected. Your key size is %d!\n",
+			     RSA_RECOMMENDED_MAX_KEY_LENGTH, DSA_RECOMMENDED_MAX_KEY_LENGTH , numbits);
 
     BIO_printf(bio_err, "Generating DSA key, %d bits\n", BN_num_bits(p));
     if (!DSA_generate_key(dsa))

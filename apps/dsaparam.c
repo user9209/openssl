@@ -25,6 +25,8 @@ NON_EMPTY_TRANSLATION_UNIT
 # include <openssl/x509.h>
 # include <openssl/pem.h>
 
+#define DSA_RECOMMENDED_MAX_KEY_LENGTH    8192
+
 static int dsa_cb(int p, int n, BN_GENCB *cb);
 
 typedef enum OPTION_choice {
@@ -128,10 +130,11 @@ int dsaparam_main(int argc, char **argv)
         goto end;
 
     if (numbits > 0) {
-        if (numbits > 8192) {
-            BIO_printf(bio_err, "The DSA key size of %d bits is currently not supported. The limit is 8192 bit.\n", BN_num_bits(p));
-            goto end;
-        }
+        if (numbits > DSA_RECOMMENDED_MAX_KEY_LENGTH) 
+            BIO_printf(bio_out, "Warning: It is not recommended to use more than %d bit for DSA keys.\n"
+                 "Longer key size may behave not as expected. Your key size is %d!\n",
+			     DSA_RECOMMENDED_MAX_KEY_LENGTH , numbits);
+        
         cb = BN_GENCB_new();
         if (cb == NULL) {
             BIO_printf(bio_err, "Error allocating BN_GENCB object\n");
