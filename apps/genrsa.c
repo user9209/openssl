@@ -127,7 +127,7 @@ opthelp:
         if (num > RSA_RECOMMENDED_MAX_KEY_LENGTH) 
             BIO_printf(bio_err, "# Warning: It is not recommended to use more than %d bit for RSA keys.      #\n"
 			                    "#          Your key size is %d! Longer key size may behave not as expected. #\n",
-			     RSA_RECOMMENDED_MAX_KEY_LENGTH, num);
+                      RSA_RECOMMENDED_MAX_KEY_LENGTH, num);
     } else if (argc > 0) {
         BIO_printf(bio_err, "Extra arguments given.\n");
         goto opthelp;

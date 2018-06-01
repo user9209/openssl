@@ -521,10 +521,10 @@ int req_main(int argc, char **argv)
 
         if ((newkey > RSA_RECOMMENDED_MAX_KEY_LENGTH && pkey_type == EVP_PKEY_RSA)
             || (newkey > DSA_RECOMMENDED_MAX_KEY_LENGTH && pkey_type == EVP_PKEY_DSA))
-			BIO_printf(bio_err, "# Warning: It is not recommended to use more than %d bit for RSA keys #\n"
-			                    "#          and more than %d bit for DSA keys. Your key size is %ld!  #\n"
-                                "#          Longer key size may behave not as expected.                   #\n",
-			     RSA_RECOMMENDED_MAX_KEY_LENGTH, DSA_RECOMMENDED_MAX_KEY_LENGTH , newkey);
+               BIO_printf(bio_err, "# Warning: It is not recommended to use more than %d bit for RSA keys #\n"
+                                   "#          and more than %d bit for DSA keys. Your key size is %ld!  #\n"
+                                   "#          Longer key size may behave not as expected.                   #\n",
+                         RSA_RECOMMENDED_MAX_KEY_LENGTH, DSA_RECOMMENDED_MAX_KEY_LENGTH , newkey);
 
         if (genctx == NULL) {
             genctx = set_keygen_ctx(NULL, &pkey_type, &newkey,
@@ -627,15 +627,6 @@ int req_main(int argc, char **argv)
             BIO_printf(bio_err, "you need to specify a private key\n");
             goto end;
         }
-		
-		// todo: check key size
-		/*
-		if (BN_num_bits(pkey) > DSA_RECOMMENDED_MAX_KEY_LENGTH)
-            BIO_printf(bio_err, "Warning: It is not recommended to use more than %d bit for RSA keys"
-			     "and more than %d bit for DSA keys.\n"
-                 "Longer key size may behave not as expected. Your key size is %d!\n",
-			     RSA_RECOMMENDED_MAX_KEY_LENGTH, DSA_RECOMMENDED_MAX_KEY_LENGTH , BN_num_bits(pkey));
-	     */
 
         if (req == NULL) {
             req = X509_REQ_new();
