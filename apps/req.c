@@ -521,9 +521,9 @@ int req_main(int argc, char **argv)
 
         if ((newkey > RSA_RECOMMENDED_MAX_KEY_LENGTH && pkey_type == EVP_PKEY_RSA)
             || (newkey > DSA_RECOMMENDED_MAX_KEY_LENGTH && pkey_type == EVP_PKEY_DSA))
-			BIO_printf(bio_err, "Warning: It is not recommended to use more than %d bit for RSA keys\n"
-			     "        and more than %d bit for DSA keys.\n"
-                 "        Longer key size may behave not as expected. Your key size is %ld!\n",
+			BIO_printf(bio_err, "# Warning: It is not recommended to use more than %d bit for RSA keys #\n"
+			                    "#          and more than %d bit for DSA keys. Your key size is %ld!  #\n"
+                                "#          Longer key size may behave not as expected.                   #\n",
 			     RSA_RECOMMENDED_MAX_KEY_LENGTH, DSA_RECOMMENDED_MAX_KEY_LENGTH , newkey);
 
         if (genctx == NULL) {
