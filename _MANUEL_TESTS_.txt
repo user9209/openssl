@@ -1,0 +1,23 @@
+# Hint:
+# You can terminate any generation of keys by pressing Ctrl + c
+# Output is the interessting part:
+
+
+# Should not show warnings:
+
+./apps/openssl genrsa -out a.key 16384
+./apps/openssl dsaparam -outform PEM -out b.config 8192
+
+# Should show warnings:
+
+./apps/openssl genrsa -out a.key 20000
+./apps/openssl dsaparam -outform PEM -out b.config 16384
+
+# use pregenerated dsa config as it takes a long time to generate
+./apps/openssl req -new -sha256 -nodes -newkey dsa:dsa16.config -keyout c.key -out c.csr -subj "/C=US/O=DEMO/CN=HELLO"
+
+./apps/openssl gendsa -out b.key dsa16.config
+# not a test (needed for line below):
+./apps/openssl req -new -sha256 -nodes -key b.key -out b.csr -subj "/C=US/O=DEMO/CN=HELLO"
+./apps/openssl x509 -req -sha256 -extfile x509.ext -extensions ca -in b.csr -signkey b.key -days 7300 -out b.crt
+
